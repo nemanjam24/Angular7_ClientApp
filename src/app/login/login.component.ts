@@ -48,7 +48,8 @@ export class LoginComponent implements OnInit {
       },
       error => {
         this.invalidLogin = true;
-        this.ErrorMessage = "Invalid details supplied - Could not Log in";
+        this.ErrorMessage = error.error.loginError;
+        console.log(error);
         console.log(this.ErrorMessage);
       }
     );
