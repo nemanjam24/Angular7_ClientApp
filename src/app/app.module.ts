@@ -7,10 +7,11 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { ProductsComponent } from './products/products.component';
 import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { DataTablesModule } from 'angular-datatables';
+import { AccessDeniedComponent } from './errors/access-denied/access-denied.component';
 
 @NgModule({
   declarations: [
@@ -18,8 +19,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     NavMenuComponent,
     LoginComponent,
     RegisterComponent,
-    ProductsComponent,
-    HomeComponent
+    HomeComponent,
+    AccessDeniedComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +28,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    DataTablesModule
   ],
   providers: [],
   bootstrap: [AppComponent]

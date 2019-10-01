@@ -74,6 +74,12 @@ export class AccountService {
   }
 
   private checkLoginStatus(): boolean{
+    let loginCookie = localStorage.getItem('loginStatus');
+    if(loginCookie == "1")
+    {
+      return true;
+    }
+
     return false;
   }
 }
