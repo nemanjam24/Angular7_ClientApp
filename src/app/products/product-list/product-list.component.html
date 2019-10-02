@@ -19,7 +19,7 @@
           <td>{{ product.name | uppercase }}</td>
           <td>{{ product.description }}</td>
           <td>{{ true == product.outofStock ? 'No' : 'Yes' }}</td>
-          <td>{{ product.price | currency:'USA':'symbol-narorw':'.2' }}</td>
+          <td>{{ product.price | currency:'USD':'symbol-narrow':'.2' }}</td>
           <td><img *ngIf="product.imageUrl" [src]="product.imageUrl" style="float:right" width="75" /></td>
           <td>
             <div class="btn-group mt-2" role="group">
