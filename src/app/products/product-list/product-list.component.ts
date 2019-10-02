@@ -61,7 +61,7 @@ export class ProductListComponent implements OnInit {
     this.products$.subscribe(
       response => {
         this.products = response;
-
+        
         this.dtTrigger.next()
       }
     );
