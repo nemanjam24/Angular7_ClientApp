@@ -1,6 +1,6 @@
 <div class="container-fluid">
 
-    <button class="btn btn-warning mb-3 float-right text-uppercase"><i class="fa fa-plus"></i> Add Product</button>
+    <button class="btn btn-warning mb-3 float-right text-uppercase" (click)="onAddProduct()"><i class="fa fa-plus"></i> Add Product</button>
     <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-bordered row-border hover" style="width:100%">
       <thead class="text-center thead-dark">
         <tr>
@@ -37,13 +37,13 @@
 <ng-template #template>
     <div class="modal-header">
       <h4 class="modal-title">ADD NEW PRODUCT</h4>
-      <button type="button" class="close pull-right" aria-label="Close">
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body text-center">
-      <p class="list-group-item active text-center text-uppercase"></p>
-      <form [formGroup]="insertForm">
+      <p class="list-group-item active text-center text-uppercase">{{modalMessage}}</p>
+      <form [formGroup]="insertForm" (ngSubmit)="onSubmit()">
         <ul class="list-group">
           <li class="list-group-item">
             <div class="input-group">
@@ -52,9 +52,9 @@
               </div>
               <input type="text" id="name" formControlName="name" class="form-control" placeholder="eg: Macbook Air 2019" aria-label="name" aria-describedby="productTitle">
             </div>
-            <div class="errorMessage">
-              <span>Product Name is required.</span>
-              <span>Only 50 characters allowed for Product Name.</span>
+            <div class="errorMessage" *ngIf="name.touched && name.errors">
+              <span *ngIf="name.hasError('required')">Product Name is required.</span>
+              <span *ngIf="name.hasError('maxlength')">Only 50 characters allowed for Product Name.</span>
             </div>
           </li>
           <li class="list-group-item">
@@ -64,9 +64,9 @@
               </div>
               <textarea formControlName="description" class="form-control" placeholder="Describe the Product - Max 150 Characters" aria-label="Description" aria-describedby="productDescription"></textarea>
             </div>
-            <div class="errorMessage">
-              <span>Product Description is required.</span>
-              <span>Only 150 characters allowed for Product Description.</span>
+            <div class="errorMessage" *ngIf="description.touched && description.errors">
+              <span *ngIf="description.hasError('required')">Product Description is required.</span>
+              <span *ngIf="description.hasError('maxlength')">Only 150 characters allowed for Product Description.</span>
             </div>
           </li>
           <li class="list-group-item">
@@ -84,27 +84,27 @@
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fa fa-usd"></i></span>
               </div>
-              <input formControlName="price" type="text" class="form-control" placeholder="eg: 999.99">
+              <input formControlName="price" type="number" class="form-control" placeholder="eg: 999.99">
             </div>
-            <div class="errorMessage">
-              <span>Product Price is required.</span>
-              <span>Negative price Not allowed</span>
-              <span>Max price allowes is 10000</span>
+            <div class="errorMessage" *ngIf="price.touched && price.errors">
+              <span *ngIf="price.hasError('required')">Product Price is required.</span>
+              <span *ngIf="price.hasError('min')">Negative price Not allowed</span>
+              <span *ngIf="price.hasError('max')">Max price allowes is 10000</span>
             </div>
           </li>
           <li class="list-group-item">
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text" id="ImageUrl"><i class="fa fa-picture-o"></i></span>
+                <span class="input-group-text" id="imageUrl"><i class="fa fa-picture-o"></i></span>
               </div>
               <input type="text" formControlName="imageUrl" class="form-control" placeholder="eg: https://i.imgur.com/ApYPYbQ.jpg" aria-label="ImageUrl" aria-describedby="productTitle">
             </div>
-            <div class="errorMessage">
-              <span>Invalid image url.</span>
+            <div class="errorMessage" *ngIf="imageUrl.touched && imageUrl.errors">
+              <span *ngIf="imageUrl.hasError('pattern')">Invalid image url.</span>
             </div>
           </li>
           <li class="list-group-item">
-            <button class="btn btn-primary btn-block">ADD</button>
+            <button class="btn btn-primary btn-block" [disabled]="insertForm.invalid">ADD</button>
           </li>
         </ul>
   
