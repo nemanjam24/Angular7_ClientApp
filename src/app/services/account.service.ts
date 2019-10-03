@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators'
 import { Router } from '@angular/router';
+import * as jwt_decode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -74,10 +75,43 @@ export class AccountService {
   }
 
   private checkLoginStatus(): boolean{
+    
     let loginCookie = localStorage.getItem('loginStatus');
+
     if(loginCookie == "1")
     {
-      return true;
+      // Check if the token exist
+      if(localStorage.getItem('jwt') === null || localStorage.getItem('jwt') === undefined){
+        return false;
+      }
+      
+      // Get the token
+      const token = localStorage.getItem('jwt');
+      // Decode the token
+      const decoded = jwt_decode(token);
+      
+      // Check if the token is valid
+      if(decoded.exp === undefined){
+        return false;
+      }
+
+      // Get current date time
+      const dateTime = new Date(0);
+      console.log(dateTime);
+      // Convert Expiration time to UTC
+      let tokenExpireDate = dateTime.setUTCSeconds(decoded.exp);
+
+      // Check if the token expire date is grater than current date
+      if(tokenExpireDate.valueOf() > new Date().valueOf()){
+        console.log("Current date: " + new Date().valueOf());
+        console.log("Expire date: " + tokenExpireDate.valueOf());
+        return true;
+      }
+      
+      console.log("Current date: " + new Date().valueOf());
+      console.log("Expire date: " + tokenExpireDate.valueOf());
+
+      return false;
     }
 
     return false;
