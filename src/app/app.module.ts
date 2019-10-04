@@ -13,6 +13,9 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { DataTablesModule } from 'angular-datatables';
 import { AccessDeniedComponent } from './errors/access-denied/access-denied.component';
 import { JwtInterceptor } from './_helpers/jwt-intercepotor';
+import { MatConfirmDialogComponent } from './mat-confirm-dialog/mat-confirm-dialog.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -21,20 +24,24 @@ import { JwtInterceptor } from './_helpers/jwt-intercepotor';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    AccessDeniedComponent
+    AccessDeniedComponent,
+    MatConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    MatDialogModule,
     HttpClientModule,
     ModalModule.forRoot(),
-    DataTablesModule
+    DataTablesModule,
+    BrowserAnimationsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [MatConfirmDialogComponent]
 })
 export class AppModule { }

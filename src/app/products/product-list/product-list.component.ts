@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { Product } from 'src/app/interfaces/product';
 import { DataTableDirective } from 'angular-datatables';
 import { ProductService } from 'src/app/services/product.service';
-import { AccountService } from 'src/app/services/account.service';
+import { DialogService } from 'src/app/services/dialog.service';
 
 @Component({
   selector: 'app-product-list',
@@ -52,7 +52,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
   constructor(private modalService : BsModalService, 
     private productService : ProductService, 
     private fb : FormBuilder, 
-    private chRef : ChangeDetectorRef) { }
+    private chRef : ChangeDetectorRef, 
+    private dialogService : DialogService) { }
 
   ngOnInit() {
     this.dtOptions = {
@@ -114,10 +115,12 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.dtTrigger.unsubscribe();
   }
 
+  // Open Add Product Modal
   onAddProduct(){
     this.modalRef = this.modalService.show(this.modal);
   }
-
+  
+  // Method to Add new product
   onSubmit(){
     const newProduct = this.insertForm.value;
 
@@ -142,6 +145,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     );
   }
 
+  // Open Update Product Modal
   onUpdateProduct(editedProduct : Product){
     this._id.setValue(editedProduct.productId);
     this._name.setValue(editedProduct.name);
@@ -161,6 +165,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.show(this.udpateModal);
   }
 
+  // Method to Update the product
   onUpdate(){
     const updatedProduct = this.updateForm.value;
 
@@ -180,7 +185,42 @@ export class ProductListComponent implements OnInit, OnDestroy {
         console.log("Product updated");
       },
       error => {
-        console.log('Could not update Product');
+        console.log("Could not update Product");
+      }
+    );
+  }
+
+  // Open Delete Product Modal
+  onDeleteProduct(product : Product){
+    this.dialogService.openConfirmationDialog('Are you sure you want to delete this product?')
+      .afterClosed()
+      .subscribe(
+        response => {
+          if(response){
+            this.onDelete(product);
+          }
+        }
+      );
+  }
+
+  // Method to Delete the product
+  onDelete(product : Product){
+    this.productService.deleteProduct(product.productId).subscribe(
+      response => {
+        this.productService.clearCache();
+
+        this.products$ = this.productService.getProducts();
+        this.products$.subscribe(
+          newList => {
+            this.products = newList;
+            this.rerender();
+          }
+        );
+
+        console.log("Product is deleted");
+      },
+      error => {
+        console.log("Could not delete the product");
       }
     );
   }
