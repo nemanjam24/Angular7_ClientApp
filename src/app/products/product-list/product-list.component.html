@@ -23,7 +23,7 @@
           <td><img *ngIf="product.imageUrl" [src]="product.imageUrl" style="float:right" width="75" /></td>
           <td>
             <div class="btn-group mt-2" role="group">
-              <button type="button" class="btn btn-success" ><i class="fas fa-list"></i></button>
+              <button type="button" class="btn btn-success" (click)="onSelect(product)"><i class="fas fa-list"></i></button>
               <button type="button" class="btn btn-primary" (click)="onUpdateProduct(product)"><i class="fas fa-edit"></i></button>
               <button type="button" class="btn btn-danger" (click)="onDeleteProduct(product)"><i class="fas fa-trash-alt"></i></button>
             </div>

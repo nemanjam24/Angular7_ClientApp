@@ -6,6 +6,7 @@ import { Product } from 'src/app/interfaces/product';
 import { DataTableDirective } from 'angular-datatables';
 import { ProductService } from 'src/app/services/product.service';
 import { DialogService } from 'src/app/services/dialog.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -53,7 +54,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
     private productService : ProductService, 
     private fb : FormBuilder, 
     private chRef : ChangeDetectorRef, 
-    private dialogService : DialogService) { }
+    private dialogService : DialogService, 
+    private router : Router) { }
 
   ngOnInit() {
     this.dtOptions = {
@@ -223,6 +225,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
         console.log("Could not delete the product");
       }
     );
+  }
+
+  // Method to display product details
+  onSelect(product : Product){
+    this.router.navigateByUrl("/products/" + product.productId);
   }
 
   rerender(){
