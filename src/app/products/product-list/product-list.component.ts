@@ -22,12 +22,13 @@ export class ProductListComponent implements OnInit, OnDestroy {
   imageUrl : FormControl;
 
   // updateForm properties
-  update : FormGroup;
+  updateForm : FormGroup;
   _name : FormControl;
   _description : FormControl;
   _outOfStock : FormControl;
   _price : FormControl;
   _imageUrl : FormControl;
+  _id : FormControl;
 
   // addModal properties
   @ViewChild('template', { static: false }) modal : TemplateRef<any>;
@@ -89,7 +90,23 @@ export class ProductListComponent implements OnInit, OnDestroy {
       'description': this.description,
       'price': this.price,
       'imageUrl': this.imageUrl,
+      'outOfStock': true
+    });
+
+    // Initialize Update Product properties
+    this._name = new FormControl("", [Validators.required, Validators.maxLength(50)]);
+    this._description = new FormControl("", [Validators.required, Validators.maxLength(150)]);
+    this._price = new FormControl("", [Validators.required, Validators.min(0), Validators.max(10000)]);
+    this._imageUrl = new FormControl("", Validators.pattern(validateImageUrl));
+    this._id = new FormControl();
+
+    this.updateForm = this.fb.group({
+      'name': this._name,
+      'description': this._description,
+      'price': this._price,
+      'imageUrl': this._imageUrl,
       'outOfStock': true,
+      'id': this._id
     });
   }
 
@@ -121,6 +138,49 @@ export class ProductListComponent implements OnInit, OnDestroy {
       },
       erorr => {
         console.log("Could not add product");
+      }
+    );
+  }
+
+  onUpdateProduct(editedProduct : Product){
+    this._id.setValue(editedProduct.productId);
+    this._name.setValue(editedProduct.name);
+    this._description.setValue(editedProduct.description);
+    this._price.setValue(editedProduct.price);
+    this._imageUrl.setValue(editedProduct.imageUrl);
+
+    this.updateForm.setValue({
+      'id': this._id.value,
+      'name': this._name.value,
+      'description': this._description.value,
+      'price': this._price.value,
+      'imageUrl': this._imageUrl.value,
+      'outOfStock': true
+    });
+
+    this.modalRef = this.modalService.show(this.udpateModal);
+  }
+
+  onUpdate(){
+    const updatedProduct = this.updateForm.value;
+
+    this.productService.updateProduct(updatedProduct.id, updatedProduct).subscribe(
+      response => {
+        this.productService.clearCache();
+
+        this.products$ = this.productService.getProducts();
+        this.products$.subscribe(
+          updatedList => {
+            this.products = updatedList;
+            this.modalRef.hide();
+            this.rerender();
+          }
+        );
+        
+        console.log("Product updated");
+      },
+      error => {
+        console.log('Could not update Product');
       }
     );
   }

@@ -39,6 +39,7 @@ export class LoginComponent implements OnInit {
     this.accService.login(userLogin.Username, userLogin.Password).subscribe(
       response => {
         let token = (<any>response).token;
+        console.log(response);
         console.log(token);
         console.log(response.role);
         console.log("User Logged In Successfully");
