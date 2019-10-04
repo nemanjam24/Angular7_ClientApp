@@ -196,7 +196,7 @@
             </div>
           </li>
           <li class="list-group-item">
-            <button class="btn btn-primary btn-block" (click)="onUpdate()">UPDATE</button>
+            <button class="btn btn-primary btn-block" [disabled]="updateForm.invalid" (click)="onUpdate()">UPDATE</button>
           </li>
         </ul>
   
