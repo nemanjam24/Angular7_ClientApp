@@ -7,6 +7,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { ProductService } from 'src/app/services/product.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { Router } from '@angular/router';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-product-list',
@@ -43,7 +44,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   selectedProduct : Product;
   products$ : Observable<Product[]>;
   products : Product[];
-  UserStatus : string;
+  UserRoleStatus : string;
 
   // Datatables properties
   dtOptions : DataTables.Settings = {};
@@ -55,7 +56,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
     private fb : FormBuilder, 
     private chRef : ChangeDetectorRef, 
     private dialogService : DialogService, 
-    private router : Router) { }
+    private router : Router, 
+    private accService : AccountService) { }
 
   ngOnInit() {
     this.dtOptions = {
@@ -69,11 +71,17 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.products$.subscribe(
       response => {
         this.products = response;
-        
+        console.log(this.products);
         // Listen for changes
         this.chRef.detectChanges();
         
         this.dtTrigger.next()
+      }
+    );
+
+    this.accService.currentUserRole.subscribe(
+      response => {
+        this.UserRoleStatus = response;
       }
     );
 
